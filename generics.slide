@@ -1,0 +1,107 @@
+generics in go
+interfaces and code generation to the rescue
+8 Jul 2014
+Tags: foo, bar, baz
+
+Wes Freeman
+Chief Gopher, IAI
+wfreeman@infoa.com
+https://github.com/wfreeman/
+@wefreema
+
+* What are generics?
+
+We're going to go with the following definition: 
+
+The ability to provide type information to functions or types (primarily container types), so they safely deal with only the types specified, and you don't need to cast things as they go in or out.
+
+* Go's built-in containers can already do this pretty well
+
+You can pass in interfaces, structs, etc. to the built-in container types (maps, slices...), and they'll usually be happy, with some caveats.
+
+.play built-in.go /START OMIT/,/END OMIT/
+
+* This protects you from doing bad things
+
+Consider:
+
+.play built-in-no.go /START OMIT/,/END OMIT/
+
+* ... most of the time
+
+Consider the typical enum idiom:
+
+.play built-in-most.go /START OMIT/,/END OMIT/
+
+* Interfaces can be used in a lot of places
+
+Idiomatic go uses simple interfaces with a small number of functions. They can be combined/nested so you can vary the granularity easily.
+
+Usually they are simply functions turned into nouns. Structs with the Close() function implement the Closer interface.
+
+Some common ones you'll probably use:
+
+	type Reader interface {
+		Read(p []byte) (n int, err error)
+	}
+
+	type Closer interface {
+		Close() error
+	}
+
+	type ReadCloser interface {
+		Reader
+		Closer
+	}
+
+* Inheritance in go...
+
+Anonymous members give the inheriting type the methods/attributes of the contained type. Employee will have a .Name.
+
+.play inheritance-person.go
+
+* Inheritance...
+
+Will this work?
+
+.play inheritance-no.go /START OMIT/,/END OMIT/
+
+* Inheritance...
+
+Interfaces to the rescue:
+
+.play inheritance.go /START OMIT/,/END OMIT/
+
+* Polymorphism... 
+
+.code shapes.go /START OMIT/,/END OMIT/
+
+* Polymorphism... 
+
+We can do cool stuff, like call the Area() method on the various Shapes in a slice:
+
+.play shapes.go /^func main/,/^}/
+
+* Even maps can take interface keys and values
+
+As long as the interfaces are comparable.
+
+	wutterShapeMap := map[Wutter]Shape{}
+
+This sort of flexibility can take you a long way.
+
+* The trouble is for the 10% use case
+
+When you need something that isn't handled by the built-in types. Say you need a thread-safe hash map, or a tree set. 
+
+People coming from other worlds, C++/C#/Java, expect to find these sorts of "generic containers" sprinkled about in standard libraries. Or when they're not, you can take advantage of the generics syntax to write them yourself.
+
+* You might try something like this
+
+.play threadsafehashmap.go /START OMIT/,/END OMIT/
+
+While this will work, you're going to find yourself casting and type asserting all over the place. This leads to brittle and ugly code.
+
+* Ugly and brittle...
+
+.play threadsafehashmap.go /^func main/,/}/
