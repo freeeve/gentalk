@@ -108,6 +108,12 @@ Interfaces to the rescue:
 
 .play inheritance.go /START OMIT/,/END OMIT/
 
+* Inheritance...
+
+Interfaces to the rescue:
+
+.play inheritance.go /^func main/,/^}/
+
 * Polymorphism... 
 
 .code shapes.go /START OMIT/,/END OMIT/
