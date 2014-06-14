@@ -9,11 +9,45 @@ wfreeman@infoa.com
 https://github.com/wfreeman/
 @wefreema
 
+* We'll attempt to cover...
+
+- What are generics?
+- How interfaces, structs, user-defined types work in go
+- How built-in containers work with these concepts (slice, map, channel, etc.)
+- Caveats...
+- Why we need generics to cover some use-cases
+- How gen works to generate code
+- How to write your own template for gen
+
 * What are generics?
 
 We're going to go with the following definition: 
 
 The ability to provide type information to functions or types (primarily container types), so they safely deal with only the types specified, and you don't need to cast things as they go in or out.
+
+Syntax:
+
+  // Java:
+  HashMap<Long, Wut> m = new HashMap<Long, Wut>();
+
+  // Scala:
+  val m = HashMap[Long, Wut]()
+
+  // C++:
+  std::unordered_map<long,Wut> m;
+
+  // Go:
+  m := map[long]Wut{}
+
+* The trouble is...
+
+The other languages allow user defined container types to accept a type parameter in the implementation, where go does not. Go's map is built in.
+
+There's no way in Go to define a new AwesomeDataStructure<k,v> type that can handle many types.
+
+Luckily, you don't need to do this that often.
+
+But when you do, you sure feel like Go could use some help. (more on that later...)
 
 * Go's built-in containers can already do this pretty well
 
@@ -39,7 +73,7 @@ Idiomatic go uses simple interfaces with a small number of functions. They can b
 
 Usually they are simply functions turned into nouns. Structs with the Close() function implement the Closer interface.
 
-Some common ones you'll probably use:
+Some common ones you'll probably use from the io package:
 
 	type Reader interface {
 		Read(p []byte) (n int, err error)

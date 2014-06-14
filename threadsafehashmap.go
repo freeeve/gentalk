@@ -2,6 +2,7 @@ package main
 
 import "sync"
 
+// START OMIT
 type ThreadSafeHashMap struct {
 	m    map[interface{}]interface{}
 	mut  *sync.Mutex
@@ -23,6 +24,7 @@ func (hm ThreadSafeHashMap) Get(k interface{}) interface{} {
 	defer hm.mut.Unlock()
 	return hm.m[k]
 }
+// END OMIT
 
 func main() {
 

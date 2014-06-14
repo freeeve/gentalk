@@ -19,6 +19,7 @@ type Employee struct {
 	Person
 	Salary int
 }
+// END OMIT
 
 func main() {
 	people := []Namer{}
@@ -29,4 +30,3 @@ func main() {
 	}
 }
 
-// END OMIT
