@@ -43,13 +43,15 @@ Syntax:
 
 The other languages allow user defined container types to accept a type parameter in the implementation, where go does not. Go's map is built in.
 
-There's no way in Go to define a new AwesomeDataStructure<k,v> type that can handle many types.
+There's no way in Go to define a new AwesomeContainer<K,V> type that can handle many types.
 
 Luckily, you don't need to do this that often.
 
 But when you do, you sure feel like Go could use some help. (more on that later...)
 
 * Go's built-in containers can already do this pretty well
+
+A quick review...
 
 You can pass in interfaces, structs, etc. to the built-in container types (maps, slices...), and they'll usually be happy, with some caveats.
 
