@@ -18,6 +18,7 @@ https://github.com/wfreeman/
 - Why we need generics to cover some use-cases
 - How gen works to generate code
 - How to write your own template for gen
+- Rob Pike jumps into the game
 
 * What are generics?
 
@@ -130,7 +131,11 @@ As long as the interfaces are comparable.
 
 	wutterShapeMap := map[Wutter]Shape{}
 
+The other built-in containers allow interfaces as well--channels, slices, etc.
+
 This sort of flexibility can take you a long way.
+
+You can even build an efficient queue/stack out of a slice in a few lines.
 
 * The trouble is for the 10% use case
 
@@ -142,8 +147,57 @@ People coming from other worlds, C++/C#/Java, expect to find these sorts of "gen
 
 .play threadsafehashmap.go /START OMIT/,/END OMIT/
 
-While this will work, you're going to find yourself casting and type asserting all over the place. This leads to brittle and ugly code.
+While this will work, you're going to find yourself casting and type asserting all over the place. This leads to brittle and ugly code (in my opinion).
 
 * Ugly and brittle...
 
-.play threadsafehashmap.go /^func main/,/}/
+.play threadsafehashmap.go /^func main/,/^}/
+
+* This is where gen comes in
+
+Matt Sherman's gen tool uses the go templating functionality to generate code through "typewriters" and some doc hint tags on custom types.
+
+http://clipperhouse.github.io/gen/
+
+  gen is an attempt to bring some generics-like functionality to Go, 
+  with inspiration from C#’s Linq, JavaScript’s Array methods and the 
+  underscore library. Operations include filtering, grouping, sorting and more.
+
+* gen already supports a few basics
+
+List, Set, Ring containers. 
+
+  // +gen containers:"Set,List,Ring"
+  type Thing struct {
+      ...
+  }
+
+Typed slices with predicates and sorting out of the box.
+
+Docs hinted at doing more things: trees, maps, etc.
+
+* I wanted a sorted set
+
+I decided to see how to implement a typewriter to make my sorted set generic
+
+.code container.go
+
+* Sorted set continued..
+
+.code templates.go
+
+* Future gen plans... (for me)
+
+More templates!
+
+Concurrent containers, map containers (multi-type), sorted maps. GPU-enhanced containers?
+
+Attempt some functional programming standards like a map and fold function--not sure if this will be functional enough to be useful, but might be worth trying.
+
+* Rob Pike
+
+The big Gopher himself started getting people riled up on the mailing list with his "go generate" proposal--even managed to shut down google docs.
+
+http://goo.gl/zoy6Kr
+
+Shares a lot of goals from gen, but seems more complex to use.
